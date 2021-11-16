@@ -30,6 +30,8 @@ jobs:
         run: |
           DIGEST=$(skopeo --insecure-policy --override-arch ${{ matrix.arch }} inspect docker://${BUILDER_IMAGE} | jq -r '.Digest')
           docker run --rm -t -v $PWD:/build ${BUILDER_IMAGE}@${DIGEST} \
+          echo $PWD \
+          ls -l $PWD \
           sh -c "nix build -f /build/nix && cp /build/result/bin/skopeo /build/skopeo-linux-${{ matrix.arch }}"
           sha256sum /build/skopeo-linux-${{ matrix.arch }} > /build/skopeo-linux-${{ matrix.arch }}.sha256sum.txt
 
